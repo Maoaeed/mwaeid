@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تطبيق المواعيد</title>
+<link rel="manifest" href="manifest.json">
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+}
+</script>
+<style>
+body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin:0; padding:0; }
+header { background-color: #0b84ff; color: white; text-align: center; padding: 15px; }
+table { width: 90%; margin: 20px auto; border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+th { background-color: #e0e0e0; }
+button { padding: 5px 10px; margin: 2px; }
+</style>
+</head>
+<body>
+<header>
+<h1>تطبيق المواعيد</h1>
+</header>
+
+<div style="width:90%; margin:auto;">
+<button onclick="addAppointment()">إضافة موعد</button>
+<table id="appointmentsTable">
+<thead>
+<tr>
+<th>اليوم</th>
+<th>التاريخ</th>
+<th>الوقت</th>
+<th>المكان</th>
+<th>ملاحظات</th>
+<th>إجراءات</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<script>
+let appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+
+function renderTable(){
+  const tbody = document.querySelector('#appointmentsTable tbody');
+  tbody.innerHTML = '';
+  appointments.forEach((app, index)=>{
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${app.day}</td>
+                     <td>${app.date}</td>
+                     <td>${app.time}</td>
+                     <td>${app.place}</td>
+                     <td>${app.notes}</td>
+                     <td>
+                       <button onclick="editAppointment(${index})">تعديل</button>
+                       <button onclick="deleteAppointment(${index})">حذف</button>
+                     </td>`;
+    tbody.appendChild(row);
+  });
+}
+
+function addAppointment(){
+  const day = prompt('اليوم:');
+  const date = prompt('التاريخ:');
+  const time = prompt('الوقت:');
+  const place = prompt('المكان:');
+  const notes = prompt('ملاحظات:');
+  if(day && date && time && place){
+    appointments.push({day,date,time,place,notes});
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    renderTable();
+    scheduleNotification(day,date,time);
+  }
+}
+
+function editAppointment(i){
+  const app = appointments[i];
+  const day = prompt('اليوم:', app.day);
+  const date = prompt('التاريخ:', app.date);
+  const time = prompt('الوقت:', app.time);
+  const place = prompt('المكان:', app.place);
+  const notes = prompt('ملاحظات:', app.notes);
+  if(day && date && time && place){
+    appointments[i] = {day,date,time,place,notes};
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    renderTable();
+  }
+}
+
+function deleteAppointment(i){
+  if(confirm('هل تريد حذف هذا الموعد؟')){
+    appointments.splice(i,1);
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    renderTable();
+  }
+}
+
+// إشعار (تنبيه قبل 24 ساعة) – يعمل فقط إذا وافق المتصفح
+function scheduleNotification(day,date,time){
+  if('Notification' in window){
+    Notification.requestPermission().then(permission=>{
+      if(permission==='granted'){
+        const notifTime = new Date(`${date} ${time}`);
+        notifTime.setHours(notifTime.getHours()-24);
+        const now = new Date();
+        const delay = notifTime - now;
+        if(delay>0){
+          setTimeout(()=>{ new Notification('تذكير موعد',{body:`موعدك ${day} في ${time} بمكان ${place}`}) }, delay);
+        }
+      }
+    });
+  }
+}
+
+renderTable();
+</script>
+</body>
+</html>
