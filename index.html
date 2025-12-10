@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تطبيق المواعيد الموسع</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="lock-screen" class="hidden">
+        <h2>أدخل الرقم السري</h2>
+        <input type="password" id="lock-pass" placeholder="الرقم السري">
+        <button id="unlock-btn">فتح</button>
+    </div>
+    <div id="app">
+        <div id="settings-menu">
+            <h3>الإعدادات</h3>
+            <label>اللغة:</label>
+            <select id="language-select">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+            </select>
+            <label>حجم الخط:</label>
+            <input type="range" id="font-size" min="12" max="24" value="14">
+            <label>لون الخط:</label>
+            <input type="color" id="font-color" value="#000000">
+            <label>خلفية:</label>
+            <input type="color" id="bg-color" value="#ffffff">
+            <button id="add-appointment">إضافة موعد</button>
+            <label>قفل التطبيق:</label>
+            <input type="checkbox" id="enable-lock">
+            <label>وقت التنبيه قبل الموعد (دقيقة):</label>
+            <input type="number" id="alert-time" value="60">
+            <button id="export-json">تصدير JSON</button>
+            <input type="file" id="import-json" accept=".json">
+        </div>
+        <div id="clock"></div>
+        <div id="calendar"></div>
+        <table id="appointments-table">
+            <thead>
+                <tr>
+                    <th data-key="date">التاريخ</th>
+                    <th data-key="time">الوقت</th>
+                    <th data-key="place">المكان</th>
+                    <th data-key="notes">الملاحظات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+<script src="app.js"></script>
+</body>
+</html>
