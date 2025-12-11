@@ -1,0 +1,16 @@
+{
+    "title": "Termin-App",
+    "settings": "Einstellungen",
+    "language": "Sprache",
+    "fontSize": "Schriftgröße",
+    "fontColor": "Schriftfarbe",
+    "bgColor": "Hintergrundfarbe",
+    "alertTime": "Erinnerung vorher (Minuten)",
+    "add": "Termin hinzufügen",
+    "export": "Termine exportieren",
+    "date": "Datum",
+    "time": "Zeit",
+    "place": "Ort",
+    "notes": "Notizen",
+    "actions": "Aktionen"
+}
